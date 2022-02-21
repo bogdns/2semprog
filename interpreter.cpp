@@ -40,7 +40,7 @@ void Interpreter::help() {
                  "<условия>: \n"
                  "имя(\"*\" - пропуск условия)\n"
                  "минимальный номер теста, максимальный номер теста(если номера тестов равны -1, то пропуск условия)\n"
-                 "количество элементов массивов(-1 - пропуск условия)\n"
+                 "количество элементов массивов(0 - пропуск условия)\n"
                  "нижняя граница баллов, верхняя граница баллов\n";
 }
 
@@ -57,8 +57,8 @@ void Interpreter::save() {
 }
 
 void Interpreter::add() {
-    PersonTest temp;
-    temp.read();
+    auto *temp = new PersonTest();
+    temp->read();
     base->add(temp);
 }
 
@@ -69,7 +69,7 @@ void Interpreter::sort() {
 void Interpreter::find() {
     base->print(get_string("Name: "), get_integer("Min test number: "),
                 get_integer("Max test number: "),
-                get_integer("Number of numbers"),
+                get_integer("Number of numbers: "),
                 get_vector("Lower score limit: "),
                 get_vector("Upper score limit: "));
 }
@@ -139,11 +139,15 @@ std::string Interpreter::get_first_word(std::string &word) {
 
 Interpreter::Interpreter() {
     std::cin.exceptions(std::ios_base::failbit | std::ios_base::badbit);
-    *base = TestBase();
+    base = new TestBase();
 }
 
 Interpreter::Interpreter(TestBase &testBase) : base(&testBase) {
     std::cin.exceptions(std::ios_base::failbit | std::ios_base::badbit);
+}
+
+Interpreter::~Interpreter() {
+    delete base;
 }
 
 

@@ -9,31 +9,21 @@
 
 class TestBase {
 private:
-    struct Node{
-        PersonTest &test;
-        Node *next = nullptr;
-        Node *prev = nullptr;
+    struct Node {
+        PersonTest *test;
+        Node *next;
+        Node *prev;
 
+        explicit Node(PersonTest *test);
 
-        explicit Node(PersonTest &test);
-        Node &operator=(const Node &other);
-        bool operator==(const Node &other) const;
+        bool operator==(const Node &other);
+
         bool operator!=(const Node &other);
     };
 
-    struct BaseIterator{
-        Node *node;
-        explicit BaseIterator(Node &element);
-        // prefix increment
-        BaseIterator& operator++();
-
-        // prefix decrement
-        BaseIterator& operator--();
-    };
-
-    Node *first = nullptr;
-    Node *last = nullptr;
-    int _size = 0;
+    Node *first;
+    Node *last;
+    int _size;
 
     Node **sortarray = nullptr; // sort optimisation (O(1) element access)
 
@@ -50,16 +40,13 @@ public:
 
     void write(const std::string &path);
 
-    BaseIterator begin();
-    BaseIterator end();
-
-    void add(PersonTest &element);
+    void add(PersonTest *element);
 
     bool is_empty() const;
 
     void sort();
 
-    void addToSorted(const PersonTest &element);
+    void addToSorted(PersonTest *element);
 
     std::ifstream &operator>>(std::ifstream &file);
 
@@ -72,14 +59,14 @@ public:
 
     void destroy();
 
-    void copy(const TestBase &testBase);
+    void copy(const TestBase &other);
 
     void print(const std::string &name, int test_number_min, int test_number_max,
                int number_of_numbers,
                const std::vector<float> &lower_score_limit,
                const std::vector<float> &upper_score_limit);
 
-    PersonTest &getBallList(int test_number);
+    void getBallList(int test_number);
 };
 
 #endif //INC_2SEM_TESTBASE_H

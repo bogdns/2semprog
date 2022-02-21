@@ -9,14 +9,14 @@
 
 class Interpreter {
 private:
-    TestBase *base{};
+    TestBase *base;
     bool InterpreterShouldStop = false;
     std::string command;
     std::string remainder;
 
     std::vector<float> get_vector(const std::string &message); // get array from interpreter
     std::string get_first_word(std::string &word);
-    std::string get_command(); // get command from interpreter
+
     std::string get_string(const std::string &message = ""); // get string parameters from interpreter
     int get_integer(const std::string &message = ""); // get integer parameters from interpreter
     float get_float(const std::string &message = ""); // get float parameters from interpreter
@@ -24,6 +24,8 @@ public:
     explicit Interpreter(TestBase &testBase);
 
     Interpreter();
+
+    ~Interpreter();
 
     void run(); // run interpreter
 

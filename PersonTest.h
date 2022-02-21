@@ -14,14 +14,16 @@ private:
     std::string name;
     int test_number;
     std::vector<float> results;
-    unsigned long number_of_questions;
+    int number_of_questions;
 
 public:
     PersonTest(const std::string &name, const int &test_number, const std::vector<float> &results);
 
-    PersonTest(const PersonTest& test);
+    PersonTest(const PersonTest &test);
 
     PersonTest();
+
+    void init();
 
     void init(const std::string &name, const int &test_number, const std::vector<float> &results);
 
@@ -37,11 +39,23 @@ public:
 
     void print();
 
-    int compare(const PersonTest &other);
+    std::string getName();
 
-    static int comparator(const PersonTest &first, const PersonTest &second);
+    int getTestNumber() const;
 
-    bool check(const std::string &name, int test_number_min, int test_number_max,
+    std::vector<float> getResults();
+
+    int getNumberOfQuestions() const;
+
+    //TODO нужно ли использовать атрибут [[nodiscard]] и насколько необходимо использовать атрибуты?
+    // захламление кода или необходимость?
+    int compare(const PersonTest *other) const;
+
+    static int comparator(const PersonTest *first, const PersonTest *second);
+
+    bool check(const std::string &name,
+               int test_number_min, int test_number_max,
+               int number_of_numbers,
                const std::vector<float> &lower_score_limit,
                const std::vector<float> &upper_score_limit);
 
