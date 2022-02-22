@@ -15,10 +15,6 @@ private:
         Node *prev;
 
         explicit Node(PersonTest *test);
-
-        bool operator==(const Node &other);
-
-        bool operator!=(const Node &other);
     };
 
     Node *first;
@@ -42,7 +38,9 @@ public:
 
     void add(PersonTest *element);
 
-    bool is_empty() const;
+    [[nodiscard]] int size() const;
+
+    [[nodiscard]] bool is_empty() const;
 
     void sort();
 
@@ -53,7 +51,6 @@ public:
     std::ofstream &operator<<(std::ofstream &file);
 
     void remove(const std::string &name, int test_number_min, int test_number_max,
-                int number_of_numbers,
                 const std::vector<float> &lower_score_limit,
                 const std::vector<float> &upper_score_limit);
 
@@ -62,7 +59,6 @@ public:
     void copy(const TestBase &other);
 
     void print(const std::string &name, int test_number_min, int test_number_max,
-               int number_of_numbers,
                const std::vector<float> &lower_score_limit,
                const std::vector<float> &upper_score_limit);
 

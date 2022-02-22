@@ -15,7 +15,9 @@ private:
     int test_number;
     std::vector<float> results;
     int number_of_questions;
-
+    std::string gets(const std::string &message);
+    float getf(const std::string &message);
+    int geti(const std::string &message);
 public:
     PersonTest(const std::string &name, const int &test_number, const std::vector<float> &results);
 
@@ -39,13 +41,13 @@ public:
 
     void print();
 
-    std::string getName();
+    [[nodiscard]] std::string getName() const;
 
-    int getTestNumber() const;
+    [[nodiscard]] int getTestNumber() const;
 
     std::vector<float> getResults();
 
-    int getNumberOfQuestions() const;
+    [[nodiscard]] int getNumberOfQuestions() const;
 
     //TODO нужно ли использовать атрибут [[nodiscard]] и насколько необходимо использовать атрибуты?
     // захламление кода или необходимость?
@@ -55,7 +57,6 @@ public:
 
     bool check(const std::string &name,
                int test_number_min, int test_number_max,
-               int number_of_numbers,
                const std::vector<float> &lower_score_limit,
                const std::vector<float> &upper_score_limit);
 

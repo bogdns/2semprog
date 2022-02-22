@@ -31,19 +31,26 @@ void PersonTest::destroy() {
 }
 
 void PersonTest::read() {
-    std::cout << "Name: ";
-    std::cin >> name;
-    std::cout << "Test number: ";
-    std::cin >> test_number;
-    std::cout << "How many questions?";
-    std::cin >> number_of_questions;
+    // safe read
+
+    std::string name_ = gets("Name: ");
+    int test_number_ = geti("Test number: ");
+
+    if (test_number_ < 0) throw std::runtime_error("Test number cannot be less than 0");
+
+    int number_of_questions_ = geti("Number of questions: ");
+
+    if (number_of_questions_ <= 0) throw std::runtime_error("Number of questions cannot be less than 0!");
+    std::vector<float> results_;
     std::cout << "Results: ";
-    results.reserve(number_of_questions);
-    for (int i = 0; i < number_of_questions; ++i) {
-        float temp;
-        std::cin >> temp;
-        results.push_back(temp);
+    results_.reserve(number_of_questions_);
+    for (int i = 0; i < number_of_questions_; ++i) {
+        results_.push_back(getf(""));
     }
+    name = name_;
+    test_number = test_number_;
+    number_of_questions = number_of_questions_;
+    results = results_;
 }
 
 void PersonTest::read(std::ifstream &file) {
@@ -86,28 +93,29 @@ int PersonTest::comparator(const PersonTest *first, const PersonTest *second) {
 
 bool PersonTest::check(const std::string &name,
                        int test_number_min, int test_number_max,
-                       int number_of_numbers,
                        const std::vector<float> &lower_score_limit,
                        const std::vector<float> &upper_score_limit) {
 
     // the number of questions must match the size of the given arrays(l_s_l, u_s_l)
-    if (number_of_questions != lower_score_limit.size() || number_of_questions != upper_score_limit.size()) {
-        throw std::runtime_error("Error in \"check\" function: invalid array size\n");
+    if (!(lower_score_limit.empty() && upper_score_limit.empty())) {
+        if (lower_score_limit.size() != upper_score_limit.size())
+            throw std::runtime_error("Lower score limit and upper must have same sizes");
+        if (number_of_questions != lower_score_limit.size() || number_of_questions != upper_score_limit.size()) {
+            return false;
+        }
     }
-
     if (name != "*" && // skip condition
         this->name != name)
         return false;
 
-    if(test_number_max<test_number_min) throw std::runtime_error("MAX cannot be less than MIN");
+    if (test_number_max < test_number_min) throw std::runtime_error("MAX cannot be less than MIN");
 
     if (test_number_min != -1 && test_number_max != -1 && // skip condition
         (test_number < test_number_min || test_number > test_number_max))
         return false;
 
-    if (number_of_numbers < 0) throw std::runtime_error("Less than zero!");
 
-    if (number_of_numbers != 0) { // skip condition
+    if (!lower_score_limit.empty()) { // skip condition
         // check lower and upper score limit
         for (auto cur = results.cbegin(), lwr = lower_score_limit.cbegin(),
                      upr = upper_score_limit.cbegin();
@@ -139,13 +147,14 @@ bool PersonTest::operator==(const PersonTest &other) {
     return false;
 }
 
-PersonTest::PersonTest(const PersonTest &test) {
+PersonTest::PersonTest(
+        const PersonTest &test) {
     copy(test);
 }
 
 void PersonTest::print() {
     std::cout << "-----------------------------------------------------------------------------\n";
-    std::cout << "Name: " << name << "Test number: " << test_number << '\n';
+    std::cout << "Name: " << name << "\nTest number: " << test_number << '\n';
     if (!results.empty()) std::cout << "Score: (" << results[0];
     for (int i = 1; i < results.size(); ++i) {
         std::cout << ", " << results[i];
@@ -166,7 +175,7 @@ void PersonTest::init() {
     number_of_questions = 0;
 }
 
-std::string PersonTest::getName() {
+std::string PersonTest::getName() const {
     return name;
 }
 
@@ -180,4 +189,25 @@ std::vector<float> PersonTest::getResults() {
 
 int PersonTest::getNumberOfQuestions() const {
     return number_of_questions;
+}
+
+std::string PersonTest::gets(const std::string &message) {
+    std::cout << message;
+    std::string temp;
+    std::cin >> temp;
+    return temp;
+}
+
+float PersonTest::getf(const std::string &message) {
+    std::cout << message;
+    float temp;
+    std::cin >> temp;
+    return temp;
+}
+
+int PersonTest::geti(const std::string &message) {
+    std::cout << message;
+    int temp;
+    std::cin >> temp;
+    return temp;
 }

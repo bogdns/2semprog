@@ -5,13 +5,20 @@
 #include "interpreter.h"
 
 void Interpreter::run() {
-
     InterpreterShouldStop = false;
     while (!InterpreterShouldStop) {
         try {
+            /*TODO костыль, так как почему-то после ввода данных, например, в -add
+             * откуда-то не пойми откуда считывается дополнительный перевод строки
+             * и получается вывод: "> > " вместо "> " так как
+             */
+            if (!(hist[hist.size() - 1].empty() && !hist[hist.size() - 2].empty())) std::cout << "> ";
+//            std::cout << "> ";
             remainder = get_string();
+            hist.push_back(remainder);
             command = get_first_word(remainder); // now we can ignore extra params
-            if ("-help" == command) help(); // вывести на экран список команд
+            if (command.empty()) {}
+            else if ("-help" == command) help(); // вывести на экран список команд
             else if ("-clear" == command) clear(); // очистить список
             else if ("-load" == command) load();// <filename> добавить список из файла
             else if ("-save" == command) save(); // <filename> сохранить список в файле
@@ -19,12 +26,27 @@ void Interpreter::run() {
             else if ("-sort" == command) sort();// отсортировать
             else if ("-find" == command) find(); // <условия> вывести на экран элементы, удовлетворяющие условиям
             else if ("-delete" == command) remove(); // <условия> удалить элементы, удовлетворяющие условиям
+            else if ("-history" == command) print_hist();
             else if ("-exit" == command) quit(); // завершить работу и выйти.
+            else std::cout << "Command not found" << std::endl;
+        }
+        catch (const std::ios_base::failure &ex) {
+            if (std::cin.eof()) {
+                std::cin.clear();
+                quit();
+            } else {
+                //NOTE cerr медленнее cout и в итоге получается, что "> " выводится раньше, чем ошибка, хотя
+                // ошибка выводится раньше, поэтому я использовую cout с цветным текстом вместо cerr
+                std::cin.clear();
+                std::cout << "\033[31m" << ex.what() << "\033[0m" <<'\n';
+            }
         }
         catch (const std::exception &ex) {
-            std::cerr << ex.what() << std::endl;
+            std::cout <<"\033[31m"<< ex.what() <<"\033[0m"<< std::endl;
+            std::cin.clear();
         }
     }
+
 }
 
 void Interpreter::help() {
@@ -69,7 +91,6 @@ void Interpreter::sort() {
 void Interpreter::find() {
     base->print(get_string("Name: "), get_integer("Min test number: "),
                 get_integer("Max test number: "),
-                get_integer("Number of numbers: "),
                 get_vector("Lower score limit: "),
                 get_vector("Upper score limit: "));
 }
@@ -77,7 +98,6 @@ void Interpreter::find() {
 void Interpreter::remove() {
     base->remove(get_string("Name: "), get_integer("Min test number: "),
                  get_integer("Max test number: "),
-                 get_integer("Number of numbers"),
                  get_vector("Lower score limit: "),
                  get_vector("Upper score limit: "));
 }
@@ -87,10 +107,10 @@ void Interpreter::quit() {
 }
 
 std::string Interpreter::get_string(const std::string &message) {
-    char param[255];
+    std::string temp;
     std::cout << message;
-    std::cin.getline(param, 255);
-    return param;
+    std::getline(std::cin, temp);
+    return temp;
 }
 
 float Interpreter::get_float(const std::string &message) {
@@ -110,9 +130,11 @@ int Interpreter::get_integer(const std::string &message) {
 std::vector<float> Interpreter::get_vector(const std::string &message) {
     int n;
     std::vector<float> vec;
+    std::cout << message << std::endl;
     std::cout << "How many numbers: ";
     std::cin >> n;
-    std::cout << "Numbers: ";
+    if (n < 0) throw std::runtime_error("Size cannot be less than zero!");
+    if (n != 0)std::cout << "Numbers: ";
     for (int i = 0; i < n; ++i) {
         float temp;
         std::cin >> temp;
@@ -143,11 +165,18 @@ Interpreter::Interpreter() {
 }
 
 Interpreter::Interpreter(TestBase &testBase) : base(&testBase) {
-    std::cin.exceptions(std::ios_base::failbit | std::ios_base::badbit);
+    std::cin.exceptions(std::ios_base::failbit | std::ios_base::badbit | std::ios_base::eofbit);
 }
 
 Interpreter::~Interpreter() {
     delete base;
+}
+
+void Interpreter::print_hist() {
+    std::cout << "History:" << std::endl;
+    for (int i = 1; i < hist.size(); ++i) {
+        std::cout << '\"' << hist[i] << '\"' << std::endl;
+    }
 }
 
 

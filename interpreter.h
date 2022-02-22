@@ -13,6 +13,7 @@ private:
     bool InterpreterShouldStop = false;
     std::string command;
     std::string remainder;
+    std::vector<std::string> hist{"a","a"};
 
     std::vector<float> get_vector(const std::string &message); // get array from interpreter
     std::string get_first_word(std::string &word);
@@ -21,9 +22,10 @@ private:
     int get_integer(const std::string &message = ""); // get integer parameters from interpreter
     float get_float(const std::string &message = ""); // get float parameters from interpreter
 public:
-    explicit Interpreter(TestBase &testBase);
 
     Interpreter();
+
+    explicit Interpreter(TestBase &testBase);
 
     ~Interpreter();
 
@@ -46,6 +48,8 @@ public:
     void find();
 
     void remove();
+
+    void print_hist();
 
     void quit();
 };
