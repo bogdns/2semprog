@@ -4,7 +4,8 @@
 
 #ifndef INC_2SEM_INTERPRETER_H
 #define INC_2SEM_INTERPRETER_H
-
+#define RED "\033[31m"
+#define RESET "\033[0m"
 #include "TestBase.h"
 
 class Interpreter {
