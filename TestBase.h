@@ -36,6 +36,10 @@ public:
 
     void write(const std::string &path);
 
+    void read(std::ifstream &file);
+
+    void write(std::ofstream &file);
+
     void add(PersonTest *element);
 
     [[nodiscard]] int size() const;
@@ -45,10 +49,6 @@ public:
     void sort();
 
     void addToSorted(PersonTest *element);
-
-    std::ifstream &operator>>(std::ifstream &file);
-
-    std::ofstream &operator<<(std::ofstream &file);
 
     void remove(const std::string &name, int test_number_min, int test_number_max,
                 const std::vector<float> &lower_score_limit,
@@ -64,5 +64,9 @@ public:
 
     void getBallList(int test_number);
 };
+
+std::ifstream &operator>>(std::ifstream &file, TestBase &testBase);
+
+std::ofstream &operator<<(std::ofstream &file, TestBase &testBase);
 
 #endif //INC_2SEM_TESTBASE_H

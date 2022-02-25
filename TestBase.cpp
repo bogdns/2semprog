@@ -96,13 +96,15 @@ void TestBase::addToSorted(PersonTest *element) {
     last = elem;
 }
 
-std::ifstream &TestBase::operator>>(std::ifstream &file) {
-    // TODO
+std::ifstream &operator>>(std::ifstream &file, TestBase &testBase) {
+    file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    testBase.read(file);
     return file;
 }
 
-std::ofstream &TestBase::operator<<(std::ofstream &file) {
-    // TODO
+std::ofstream &operator<<(std::ofstream &file, TestBase &testBase) {
+    file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    testBase.write(file);
     return file;
 }
 
@@ -195,46 +197,18 @@ void TestBase::read(const std::string &path) {
     std::ifstream fin;
     fin.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     fin.open(path);
-    // additional vars, if something goes wrong, the read data will not affect anything
-    auto first_ = first;
-    auto last_ = last;
-    auto size_ = _size;
-    first = nullptr;
-    last = nullptr;
-    _size = 0;
-    int n;
-    try {
-        fin >> n;
-        for (int i = 0; i < n; ++i) {
-            auto *temp = new PersonTest();
-            temp->read(fin);
-            add(temp);
-        }
-    }
-    catch (const std::exception &ex) {
-        destroy();
-        first = first_;
-        last = last_;
-        _size = size_;
-        throw ex;
-    }
-
-    // delete old TestBase
-    TestBase a;
-    a._size = size_;
-    a.first = first_;
-    a.last = last_;
-    // will delete automatically after function end
+    read(fin);
+    fin.close();
 }
 
 void TestBase::write(const std::string &path) {
     // TODO как реализовать безопасную запись? Во время записи может что-то пойти не так и данные будут потерты
 
     std::ofstream fout;
+    fout.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     fout.open(path);
-    fout << _size << '\n';
-    for (auto cur_elem = first; cur_elem != nullptr; cur_elem = cur_elem->next)
-        cur_elem->test->write(fout);
+    write(fout);
+    fout.close();
 }
 
 void TestBase::print(const std::string &name,
@@ -284,6 +258,45 @@ void TestBase::sort_q(int l, int r) {
 
 int TestBase::size() const {
     return _size;
+}
+
+void TestBase::read(std::ifstream &file) {
+    // additional vars, if something goes wrong, the read data will not affect anything
+    auto first_ = first;
+    auto last_ = last;
+    auto size_ = _size;
+    first = nullptr;
+    last = nullptr;
+    _size = 0;
+    int n;
+    try {
+        file >> n;
+        for (int i = 0; i < n; ++i) {
+            auto *temp = new PersonTest();
+            temp->read(file);
+            add(temp);
+        }
+    }
+    catch (const std::exception &ex) {
+        destroy();
+        first = first_;
+        last = last_;
+        _size = size_;
+        throw ex;
+    }
+
+    // delete old TestBase
+    TestBase a;
+    a._size = size_;
+    a.first = first_;
+    a.last = last_;
+    // will delete automatically after function end
+}
+
+void TestBase::write(std::ofstream &file) {
+    file << _size << '\n';
+    for (auto cur_elem = first; cur_elem != nullptr; cur_elem = cur_elem->next)
+        cur_elem->test->write(file);
 }
 
 

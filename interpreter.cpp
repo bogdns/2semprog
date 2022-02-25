@@ -40,10 +40,12 @@ void Interpreter::run() {
                 // поэтому я использовую cout с цветным текстом вместо cerr
                 std::cin.clear();
                 std::cout << RED << ex.what() << RESET << '\n';
+//                std::cerr << ex.what() << std::endl;
             }
         }
         catch (const std::exception &ex) {
             std::cout << RED << ex.what() << RESET << std::endl;
+//            std::cerr << ex.what() << std::endl;
             std::cin.clear();
         }
     }
@@ -73,10 +75,20 @@ void Interpreter::clear() {
 
 void Interpreter::load() {
     base->read(get_first_word(remainder));
+//    std::ifstream fin;
+//    fin.exceptions(std::fstream::badbit | std::fstream::failbit);
+//    fin.open(get_first_word(remainder));
+//    fin >> *base;
+//    fin.close();
 }
 
 void Interpreter::save() {
     base->write(get_first_word(remainder));
+//    std::ofstream fout;
+//    fout.exceptions(std::fstream::badbit | std::fstream::failbit);
+//    fout.open(get_first_word(remainder));
+//    fout << *base;
+//    fout.close();
 }
 
 void Interpreter::add() {
