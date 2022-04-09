@@ -63,6 +63,7 @@ public:
                const std::vector<float> &upper_score_limit);
 
     void getBallList(int test_number);
+
 };
 
 std::ifstream &operator>>(std::ifstream &file, TestBase &testBase);

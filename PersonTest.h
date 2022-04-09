@@ -49,6 +49,12 @@ public:
 
     [[nodiscard]] int getNumberOfQuestions() const;
 
+    bool operator>(const PersonTest &test) const;
+
+    bool operator<(const PersonTest &test) const;
+
+    PersonTest& operator=(const PersonTest &test);
+
     //TODO нужно ли использовать атрибут [[nodiscard]] и насколько необходимо использовать атрибуты?
     // захламление кода или необходимость?
     int compare(const PersonTest *other) const;

@@ -36,7 +36,7 @@ void PersonTest::read() {
     std::string name_ = gets("Name: ");
     int test_number_ = geti("Test number: ");
 
-    if (test_number_ < 0) throw std::runtime_error("Test number cannot be less than 0");
+    if (test_number_ < 0) throw std::runtime_error("Test number cannot be less than 1");
 
     int number_of_questions_ = geti("Number of questions: ");
 
@@ -210,4 +210,19 @@ int PersonTest::geti(const std::string &message) {
     int temp;
     std::cin >> temp;
     return temp;
+}
+
+bool PersonTest::operator>(const PersonTest &test) const {
+    if(compare(&test) == 1) return true;
+    return false;
+}
+
+bool PersonTest::operator<(const PersonTest &test) const {
+    if(compare(&test) == -1) return true;
+    return false;
+}
+
+PersonTest &PersonTest::operator=(const PersonTest &test) {
+    copy(test);
+    return *this;
 }

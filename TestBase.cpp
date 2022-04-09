@@ -226,7 +226,8 @@ void TestBase::print(const std::string &name,
 void TestBase::getBallList(int test_number) {
     auto i = first;
     while (i != nullptr) {
-        if (i->test->check("*", test_number, test_number, std::vector<float>(), std::vector<float>())) {
+        if (i->test->check("*", test_number, test_number,
+                           std::vector<float>(), std::vector<float>())) {
             i->test->print();
         }
         i = i->next;

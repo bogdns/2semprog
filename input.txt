@@ -1,4 +1,4 @@
-6
+7
 Artem     2   5  1 2 1 2 1
 Vasya     3   3  5 4 5
 Alexander 10  4  2 3 1 5

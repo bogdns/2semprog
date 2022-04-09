@@ -1,7 +1,4 @@
-6
-Alexander 10 4 2 3 1 5 
+3
 Artem 2 5 1 2 1 2 1 
-Artem 2 4 5 4 3 6 
 Musa 5 2 1 4 
-Pavel 16 3 6 5 3 
 Vasya 3 3 5 4 5 

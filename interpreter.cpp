@@ -10,7 +10,7 @@ void Interpreter::run() {
         try {
             /*TODO костыль, так как почему-то после ввода данных, например, в -add
              * откуда-то не пойми откуда считывается дополнительный перевод строки
-             * и получается вывод: "> > " вместо "> " так как
+             * и получается вывод: "> > " вместо "> "
              */
             if (!(hist[hist.size() - 1].empty() && !hist[hist.size() - 2].empty())) std::cout << "> ";
 //            std::cout << "> ";
@@ -37,7 +37,7 @@ void Interpreter::run() {
             } else {
                 //NOTE cerr медленнее cout и к тому же это разные несинхронизированные потоки, что в итоге
                 // приводит к тому, что несмотря на более ранний вызов cerr последующий cout отрабатывает раньше,
-                // поэтому я использовую cout с цветным текстом вместо cerr
+                // поэтому я использую cout с цветным текстом вместо cerr
                 std::cin.clear();
                 std::cout << RED << ex.what() << RESET << '\n';
 //                std::cerr << ex.what() << std::endl;
@@ -173,7 +173,7 @@ std::string Interpreter::get_first_word(std::string &word) {
 }
 
 Interpreter::Interpreter() {
-    std::cin.exceptions(std::ios_base::failbit | std::ios_base::badbit);
+    std::cin.exceptions(std::ios_base::failbit | std::ios_base::badbit | std::ios_base::eofbit);
     base = new TestBase();
 }
 
